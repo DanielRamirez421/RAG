@@ -1,0 +1,74 @@
+.spacer {
+  flex: 1 1 auto;
+}
+
+.no-messages {
+  text-align: center;
+  color: #666;
+  padding: 40px;
+  font-style: italic;
+}
+
+.timestamp {
+  font-size: 0.8em;
+  color: #666;
+  margin-top: 8px;
+}
+
+.user-message .timestamp {
+  color: #ccc;
+}
+
+.temperature-control {
+  margin: 16px 0;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fafafa;
+}
+
+.temperature-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #3f51b5;
+  margin-bottom: 8px;
+}
+
+.temperature-slider {
+  width: 100%;
+  margin: 10px 0;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: #ddd;
+  outline: none;
+}
+
+.temperature-slider::-webkit-slider-thumb {
+  appearance: none;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #3f51b5;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.temperature-slider::-moz-range-thumb {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #3f51b5;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.range-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+}
