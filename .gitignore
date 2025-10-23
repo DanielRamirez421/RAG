@@ -25,3 +25,5 @@ Thumbs.db
 # Generated reports
 reportes_html/
 reportes_pdf/
+
+.history/
