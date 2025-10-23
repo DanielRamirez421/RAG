@@ -27,3 +27,6 @@ reportes_html/
 reportes_pdf/
 
 .history/
+node_modules/
+.angular/
+dist/
