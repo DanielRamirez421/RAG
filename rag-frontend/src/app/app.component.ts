@@ -71,6 +71,7 @@ export class AppComponent implements OnInit {
       content: this.currentMessage,
       isUser: true,
       timestamp: new Date(),
+      model: this.parameters.model,
     });
 
     const userQuestion = this.currentMessage;
@@ -85,6 +86,10 @@ export class AppComponent implements OnInit {
       context: this.parameters.context,
     };
 
+    if (!request.context) {
+      delete request.context;
+    }
+
     // Send to RAG service
     this.ragService.queryRAG(request).subscribe({
       next: (response) => {
@@ -93,6 +98,7 @@ export class AppComponent implements OnInit {
           isUser: false,
           timestamp: new Date(),
           sources: response.sources,
+          model: response.selected_model,
         });
         this.isLoading = false;
       },

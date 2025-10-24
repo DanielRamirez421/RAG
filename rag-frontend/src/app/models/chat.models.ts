@@ -2,7 +2,7 @@ export interface QueryRequest {
   userQuestion: string;
   model: string;
   temperature: number;
-  context: string;
+  context?: string;
 }
 
 export interface Source {
@@ -24,6 +24,7 @@ export interface ChatMessage {
   isUser: boolean;
   timestamp: Date;
   sources?: Source[];
+  model?: string;
 }
 
 export interface ChatParameters {

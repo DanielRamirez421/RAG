@@ -89,9 +89,14 @@
             </div>
           </div>
 
-          <div class="timestamp">
-            {{ message.timestamp | date : "short" }}
-          </div>
+          <span class="timestamp">
+            <div [hidden]="!message.model">
+              Model: <i>{{ message.model }}</i>
+            </div>
+            <div>
+              {{ message.timestamp | date : "short" }}
+            </div>
+          </span>
         </div>
 
         <div *ngIf="isLoading" class="loading message assistant-message">
