@@ -129,4 +129,8 @@ export class AppComponent implements OnInit {
     this.messages = [];
     this.ngOnInit(); // Add welcome message again
   }
+
+  clearContext() {
+    this.parameters.context = "";
+  }
 }

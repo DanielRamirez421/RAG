@@ -185,7 +185,13 @@ body {
 }
 
 .parameters-section button {
-  width: 100%;
+}
+
+.paramters-actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
 }
 
 .send-button {

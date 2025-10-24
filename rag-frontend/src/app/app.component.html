@@ -51,10 +51,17 @@
           </textarea>
         </mat-form-field>
 
-        <button mat-raised-button color="accent" (click)="clearChat()">
-          <mat-icon>clear</mat-icon>
-          Clear Chat
-        </button>
+        <div class="paramters-actions">
+          <button mat-raised-button color="primary" (click)="clearContext()">
+            <mat-icon>clear context</mat-icon>
+            Clear Context
+          </button>
+
+          <button mat-raised-button color="accent" (click)="clearChat()">
+            <mat-icon>clear</mat-icon>
+            Clear Chat
+          </button>
+        </div>
       </div>
     </div>
 
