@@ -37,7 +37,7 @@ import {
   styleUrls: ["./app.component.scss"],
 })
 export class AppComponent implements OnInit {
-  title = "RAG Chat Assistant";
+  title = "PLA Chat Assistant";
   messages: ChatMessage[] = [];
   currentMessage = "";
   isLoading = false;
