@@ -26,6 +26,7 @@ export interface ChatMessage {
   sources?: Source[];
   model?: string;
   temperature?: number;
+  processingTime?: number; // Tiempo en milisegundos
 }
 
 export interface ChatParameters {

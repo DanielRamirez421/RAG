@@ -32,10 +32,19 @@ $border: #e2e8f0;
   font-size: 0.8em;
   color: $text-secondary;
   margin-top: 8px;
-
   display: inline-flex;
   justify-content: space-between;
   width: 100%;
+
+  .processing-time {
+    color: $primary;
+    font-weight: 500;
+    font-size: 0.9em;
+    margin: 2px 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
 }
 
 .user-message .timestamp {

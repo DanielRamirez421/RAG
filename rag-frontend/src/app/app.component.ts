@@ -79,6 +79,9 @@ export class AppComponent implements OnInit {
     this.currentMessage = "";
     this.isLoading = true;
 
+    // Marcar el tiempo de inicio
+    const startTime = Date.now();
+
     // Prepare request
     const request: QueryRequest = {
       userQuestion: userQuestion,
@@ -94,21 +97,31 @@ export class AppComponent implements OnInit {
     // Send to RAG service
     this.ragService.queryRAG(request).subscribe({
       next: (response) => {
+        // Calcular el tiempo de procesamiento
+        const endTime = Date.now();
+        const processingTime = endTime - startTime;
+
         this.addMessage({
           content: response.answer,
           isUser: false,
           timestamp: new Date(),
           sources: response.sources,
           model: response.selected_model,
+          processingTime: processingTime,
         });
         this.isLoading = false;
       },
       error: (error) => {
+        // Calcular el tiempo de procesamiento incluso en caso de error
+        const endTime = Date.now();
+        const processingTime = endTime - startTime;
+
         console.error("Error:", error);
         this.addMessage({
           content: `Sorry, I encountered an error: ${error.message}. Please make sure the backend server is running on http://localhost:8000`,
           isUser: false,
           timestamp: new Date(),
+          processingTime: processingTime,
         });
         this.isLoading = false;
       },
@@ -133,5 +146,19 @@ export class AppComponent implements OnInit {
 
   clearContext() {
     this.parameters.context = "";
+  }
+
+  // Función para formatear el tiempo de procesamiento
+  formatProcessingTime(milliseconds: number): string {
+    if (milliseconds < 1000) {
+      return `${milliseconds}ms`;
+    } else if (milliseconds < 60000) {
+      const seconds = (milliseconds / 1000).toFixed(1);
+      return `${seconds}s`;
+    } else {
+      const minutes = Math.floor(milliseconds / 60000);
+      const seconds = ((milliseconds % 60000) / 1000).toFixed(0);
+      return `${minutes}m ${seconds}s`;
+    }
   }
 }

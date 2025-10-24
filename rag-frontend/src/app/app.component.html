@@ -98,8 +98,14 @@
 
           <span class="timestamp">
             <div [hidden]="!message.model || !message.temperature">
-              Model: <i>{{ message.model }}</i> - Temp:
+              🤖 <i>{{ message.model }}</i> - 🌡️
               <i>{{ message.temperature }}</i>
+            </div>
+            <div
+              *ngIf="message.processingTime && !message.isUser"
+              class="processing-time"
+            >
+              ⏱️ Processed in {{ formatProcessingTime(message.processingTime) }}
             </div>
             <div>
               {{ message.timestamp | date : "short" }}
