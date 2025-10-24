@@ -72,6 +72,7 @@ export class AppComponent implements OnInit {
       isUser: true,
       timestamp: new Date(),
       model: this.parameters.model,
+      temperature: this.parameters.temperature,
     });
 
     const userQuestion = this.currentMessage;

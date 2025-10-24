@@ -97,8 +97,9 @@
           </div>
 
           <span class="timestamp">
-            <div [hidden]="!message.model">
-              Model: <i>{{ message.model }}</i>
+            <div [hidden]="!message.model || !message.temperature">
+              Model: <i>{{ message.model }}</i> - Temp:
+              <i>{{ message.temperature }}</i>
             </div>
             <div>
               {{ message.timestamp | date : "short" }}

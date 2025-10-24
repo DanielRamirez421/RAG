@@ -25,6 +25,7 @@ export interface ChatMessage {
   timestamp: Date;
   sources?: Source[];
   model?: string;
+  temperature?: number;
 }
 
 export interface ChatParameters {
