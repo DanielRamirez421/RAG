@@ -20,14 +20,23 @@ app = FastAPI(
 allowed_origins = [
     "http://localhost:4200",  # Frontend local
     "http://localhost:3000",  # React local
+    "http://localhost:8080",  # Otros puertos locales
+    "http://127.0.0.1:3000",  # Localhost alternativo
     "https://tu-frontend-deploy.vercel.app",  # Frontend desplegado
     "https://*.up.railway.app",  # Railway domains
     "https://*.railway.app",     # Railway custom domains
+    "https://*.vercel.app",      # Vercel domains
+    "https://*.netlify.app",     # Netlify domains
+    "https://*.github.io",       # GitHub Pages
     # Agregar más dominios según sea necesario
 ]
 
 # En desarrollo, permitir todos los orígenes
 if os.getenv("ENVIRONMENT") == "development":
+    allowed_origins = ["*"]
+
+# Para permitir CUALQUIER origen (usar con precaución en producción)
+if os.getenv("ALLOW_ALL_ORIGINS") == "true":
     allowed_origins = ["*"]
 
 app.add_middleware(
