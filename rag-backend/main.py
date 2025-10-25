@@ -49,10 +49,29 @@ app.add_middleware(
 
 # Inicializar el servicio RAG con manejo de errores
 try:
+    # Log environment variables for debugging (without showing sensitive values)
+    logger.info("Checking environment variables...")
+    env_check = {
+        "AZURE_OPENAI_API_KEY": "SET" if os.getenv("AZURE_OPENAI_API_KEY") else "MISSING",
+        "AZURE_OPENAI_ENDPOINT": "SET" if os.getenv("AZURE_OPENAI_ENDPOINT") else "MISSING",
+        "OPENAI_API_VERSION": "SET" if os.getenv("OPENAI_API_VERSION") else "MISSING",
+        "AZURE_SEARCH_SERVICE_ENDPOINT": "SET" if os.getenv("AZURE_SEARCH_SERVICE_ENDPOINT") else "MISSING",
+        "AZURE_SEARCH_INDEX": "SET" if os.getenv("AZURE_SEARCH_INDEX") else "MISSING",
+        "AZURE_SEARCH_ADMIN_KEY": "SET" if os.getenv("AZURE_SEARCH_ADMIN_KEY") else "MISSING",
+    }
+    
+    missing_vars = [k for k, v in env_check.items() if v == "MISSING"]
+    if missing_vars:
+        logger.error(f"Missing environment variables: {missing_vars}")
+        logger.error("Please set these variables in Railway's Variables tab")
+    else:
+        logger.info("All environment variables are set")
+    
     rag_service = RAGService()
     logger.info("RAG Service initialized successfully")
 except Exception as e:
     logger.error(f"Failed to initialize RAG Service: {str(e)}")
+    logger.error("This usually means environment variables are not set correctly in Railway")
     rag_service = None
 
 @app.get("/")
