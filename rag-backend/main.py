@@ -47,8 +47,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Inicializar el servicio RAG
-rag_service = RAGService()
+# Inicializar el servicio RAG con manejo de errores
+try:
+    rag_service = RAGService()
+    logger.info("RAG Service initialized successfully")
+except Exception as e:
+    logger.error(f"Failed to initialize RAG Service: {str(e)}")
+    rag_service = None
 
 @app.get("/")
 async def root():
@@ -58,7 +63,17 @@ async def root():
 @app.get("/health")
 async def health_check():
     """Verificar el estado de la API"""
-    return {"status": "healthy", "service": "RAG Backend"}
+    health_status = {
+        "status": "healthy",
+        "service": "RAG Backend",
+        "rag_service_initialized": rag_service is not None
+    }
+    
+    if rag_service is None:
+        health_status["status"] = "unhealthy"
+        health_status["error"] = "RAG Service not initialized"
+        
+    return health_status
 
 @app.post("/query", response_model=QueryResponse)
 async def query_rag(request: QueryRequest):
@@ -70,6 +85,12 @@ async def query_rag(request: QueryRequest):
     - **temperature**: Controla la creatividad de la respuesta (0.0 = más determinista, 1.0 = más creativo)
     - **context**: Contexto personalizado o pre-prompt (opcional)
     """
+    if rag_service is None:
+        raise HTTPException(
+            status_code=503,
+            detail="RAG Service is not available. Check environment variables and Azure connections."
+        )
+    
     try:
         logger.info(f"Procesando consulta: {request.userQuestion}")
         logger.info(f"Modelo: {request.model}, Temperatura: {request.temperature}")
@@ -98,6 +119,22 @@ async def get_available_models():
         "models": ["gpt-4o-mini", "grok-3", "DeepSeek-R1", "gpt-4o"],
         "default": "gpt-4o-mini"
     }
+
+@app.get("/debug/env")
+async def debug_environment():
+    """Debug endpoint para verificar variables de entorno (solo en desarrollo)"""
+    env_vars = {
+        "AZURE_SEARCH_SERVICE_ENDPOINT": os.getenv("AZURE_SEARCH_SERVICE_ENDPOINT", "NOT_SET"),
+        "AZURE_SEARCH_INDEX": os.getenv("AZURE_SEARCH_INDEX", "NOT_SET"),
+        "AZURE_OPENAI_ENDPOINT": os.getenv("AZURE_OPENAI_ENDPOINT", "NOT_SET"),
+        "OPENAI_API_VERSION": os.getenv("OPENAI_API_VERSION", "NOT_SET"),
+        "PORT": os.getenv("PORT", "NOT_SET"),
+        "ENVIRONMENT": os.getenv("ENVIRONMENT", "NOT_SET"),
+        # No mostrar claves por seguridad
+        "AZURE_SEARCH_ADMIN_KEY": "SET" if os.getenv("AZURE_SEARCH_ADMIN_KEY") else "NOT_SET",
+        "AZURE_OPENAI_API_KEY": "SET" if os.getenv("AZURE_OPENAI_API_KEY") else "NOT_SET",
+    }
+    return {"environment_variables": env_vars}
 
 if __name__ == "__main__":
     import uvicorn

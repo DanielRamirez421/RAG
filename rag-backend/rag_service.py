@@ -21,18 +21,35 @@ class RAGService:
         self.azure_search_index = os.getenv("AZURE_SEARCH_INDEX")
         self.azure_search_key = os.getenv("AZURE_SEARCH_ADMIN_KEY")
         
-        # Inicializar clientes
-        self.openai_client = AzureOpenAI(
-            api_key=self.azure_openai_api_key,
-            azure_endpoint=self.azure_openai_endpoint,
-            api_version=self.openai_api_version
-        )
+        # Validar que todas las variables de entorno estén configuradas
+        required_vars = {
+            "AZURE_OPENAI_API_KEY": self.azure_openai_api_key,
+            "AZURE_OPENAI_ENDPOINT": self.azure_openai_endpoint,
+            "OPENAI_API_VERSION": self.openai_api_version,
+            "AZURE_SEARCH_SERVICE_ENDPOINT": self.azure_search_endpoint,
+            "AZURE_SEARCH_INDEX": self.azure_search_index,
+            "AZURE_SEARCH_ADMIN_KEY": self.azure_search_key,
+        }
         
-        self.search_client = SearchClient(
-            endpoint=self.azure_search_endpoint,
-            index_name=self.azure_search_index,
-            credential=AzureKeyCredential(self.azure_search_key)
-        )
+        missing_vars = [var for var, value in required_vars.items() if not value]
+        if missing_vars:
+            raise ValueError(f"Missing required environment variables: {', '.join(missing_vars)}")
+        
+        # Inicializar clientes
+        try:
+            self.openai_client = AzureOpenAI(
+                api_key=self.azure_openai_api_key,
+                azure_endpoint=self.azure_openai_endpoint,
+                api_version=self.openai_api_version
+            )
+            
+            self.search_client = SearchClient(
+                endpoint=self.azure_search_endpoint,
+                index_name=self.azure_search_index,
+                credential=AzureKeyCredential(self.azure_search_key)
+            )
+        except Exception as e:
+            raise ValueError(f"Failed to initialize Azure clients: {str(e)}")
     
     def get_embedding(self, text: str):
         """Obtiene el embedding de un texto usando Azure OpenAI"""
