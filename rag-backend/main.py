@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from models import QueryRequest, QueryResponse, ErrorResponse
 from rag_service import RAGService
 import logging
+import os
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
@@ -15,12 +16,25 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Configurar CORS
+# Configurar CORS para producción
+allowed_origins = [
+    "http://localhost:4200",  # Frontend local
+    "http://localhost:3000",  # React local
+    "https://tu-frontend-deploy.vercel.app",  # Frontend desplegado
+    "https://*.up.railway.app",  # Railway domains
+    "https://*.railway.app",     # Railway custom domains
+    # Agregar más dominios según sea necesario
+]
+
+# En desarrollo, permitir todos los orígenes
+if os.getenv("ENVIRONMENT") == "development":
+    allowed_origins = ["*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # En producción, especificar los dominios permitidos
+    allow_origins=allowed_origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
 
@@ -78,10 +92,11 @@ async def get_available_models():
 
 if __name__ == "__main__":
     import uvicorn
+    port = int(os.getenv("PORT", 8000))
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
-        port=8000,
-        reload=True,
+        port=port,
+        reload=False,  # Cambiar a False para producción
         log_level="info"
     )
